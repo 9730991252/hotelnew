@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <title>Index</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body class="p-3 m-0 border-0 bd-example m-0 border-0">
+
+    <!-- Example Code -->
+    
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Hotel</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+       
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Login
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="hotel_login">Hotel Login</a></li>
+                <li><a class="dropdown-item" href="waiter_login">Waiter Login</a></li>
+                <li><a class="dropdown-item" href="chef_login">Chef Login</a></li>          
+                
+              </ul>
+            </li>
+            
+          </ul>
+      
+        </div>
+      </div>
+    </nav>
+    
+    <!-- End Example Code -->
+    <h1 class="text-center pt-5">  Order Management Services</h1>
+
+
+
+
+
+
+    <div class="container  border rounded">
+      {% if messages %}
+      
+      {% for message in messages %}
+      <div class="alert alert-danger text-center mb-3">{{message}}</div>
+      {% endfor %}
+      {% endif %}
+      <div class="">
+  <div class="container my-5 jumbotron text-center">
+      <h6>Hotel Login</h6>
+      <form action="/hotel_login" method="POST">{% csrf_token %}
+        <div class="">
+    
+            <input type="number" name="mb" placeholder="Enter Your Mobile" required/><br><br>
+            <input type="number" name="pin" placeholder="Enter Your secret pin " required/><br><br>
+            <button type="submit" class="btn btn-primary" id= "btnadd"> Login </button>
+        </div>
+      </form>
+    </div>
+  
+  
+  
+  
+  
+
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
