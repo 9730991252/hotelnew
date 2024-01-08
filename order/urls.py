@@ -22,6 +22,10 @@ from order import views
 urlpatterns = [
     path('', views.index,name='index'),
     path('hotel_login', views.hotel_login,name='hotel_login'),
+    path('sunil_login', views.sunil_login,name='sunil_login'),
+    path('marketing_employee', views.marketing_employee,name='marketing_employee'),
+    path('hotel', views.hotel,name='hotel'),
+    path('marketing_employee_login', views.marketing_employee_login,name='marketing_employee_login'),
     path('chef_login', views.chef_login,name='chef_login'),
     path('chef_dashboard', views.chef_dashboard,name='chef_dashboard'),
     path('waiter_login', views.waiter_login,name='waiter_login'),

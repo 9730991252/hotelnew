@@ -26,7 +26,20 @@ def hotel_login(request):
 
 
 
-        
+def marketing_employee_login(request):
+    if request.method == "POST":
+        mb=request.POST ['mb']
+        pin=request.POST ['pin']
+        s= Marketing_Employee.objects.filter(employee_mobile=mb,pin=pin,status=1)
+        if s:
+            request.session['marketing_employee_mobile'] = request.POST["mb"]
+            return redirect('hotel')
+        else:
+            messages.success(request,"please insert correct information")            
+            return redirect('marketing_employee_login')
+    return render(request,'order/marketing_employee_login.html')
+
+
 
     
 
@@ -105,6 +118,7 @@ def employee(request):
         return redirect('hotel_login')
 
 
+
     
 def dish_category(request):
     if request.session.has_key('hotel_mobile'):
@@ -154,7 +168,7 @@ def dish(request):
     if request.session.has_key('hotel_mobile'):
         hotel_mobile = request.session['hotel_mobile']
         h=Hotel.objects.get(mobile=hotel_mobile)
-        dc=Dish_category.objects.filter(hotel_id=h.id)
+        dc=Dish_category.objects.filter(hotel_id=h.id,status=1)
         d=Dish.objects.filter(hotel_id=h.id)
         context={
             'c':dc,
@@ -331,7 +345,7 @@ def waiter_dashboard (request):
     if request.session.has_key('waiter_mobile'):
         wm = request.session['waiter_mobile']
         w=Employee.objects.get(employee_mobile=wm) 
-        t=Table.objects.filter(hotel_id=w.hotel_id)        
+        t=Table.objects.filter(hotel_id=w.hotel_id,status=1)        
         context={
             'w':w,    
             't':t,
@@ -346,7 +360,7 @@ def waiter_add_order(request,id):
         wm = request.session['waiter_mobile']
         w=Employee.objects.get(employee_mobile=wm)
         h=Hotel.objects.get(id=w.hotel_id)  
-        dish_category=Dish_category.objects.filter(hotel_id=w.hotel_id)
+        dish_category=Dish_category.objects.filter(hotel_id=w.hotel_id,status=1)
         t=Table.objects.get(id=id)        
         cart=Cart.objects.filter(hotel_id=w.hotel_id,table_id=id)
         context={
@@ -368,7 +382,7 @@ def dish_filter(request):
     if request.method == 'GET':
         filter_data = request.GET['filter']
         hotel_id = request.GET['hotel_id']
-        filter_result = Dish.objects.values().filter(dish_name__icontains=filter_data,hotel_id__icontains=hotel_id)
+        filter_result = Dish.objects.values().filter(dish_name__icontains=filter_data,hotel_id__icontains=hotel_id,status=1)
         dish = list(filter_result)
         #print(dish)
         return JsonResponse({'status': 1, 'dish': dish})
@@ -381,7 +395,7 @@ def filter_by_category(request):
     if request.method == 'GET':
         dish_category_id = request.GET['dish_category_id']
         hotel_id = request.GET['hotel_id']
-        filter_result = Dish.objects.values().filter(dish_category_id=dish_category_id,hotel_id=hotel_id)
+        filter_result = Dish.objects.values().filter(dish_category_id=dish_category_id,hotel_id=hotel_id,status=1)
         dish = list(filter_result)
         #print(dish)
         return JsonResponse({'status': 1, 'dish': dish})
@@ -422,20 +436,24 @@ def view_order(request,id):
     if request.session.has_key('hotel_mobile'):
         hm = request.session['hotel_mobile']
         h=Hotel.objects.get(mobile=hm)
+        dish_category=Dish_category.objects.filter(hotel_id=h.id,status=1)
         t=Cart.objects.filter(hotel_id=h.id,table_id=id)
         tb=Cart.objects.filter(hotel_id=h.id,table_id=id)
         amount=0
         for tb in tb:
             table_number=tb.table_number
+            employee_id=tb.employee_id
             tempamount=(tb.qty*tb.price)
             amount+=tempamount
-            #print(amount)
+            #print(employee_id)
         context={
             'h':h,
             't':t,
             'table_number':table_number,
             'total_am':amount,
-            'table_id':id
+            'table_id':id,
+            'dc':dish_category,
+            'employee_id':employee_id
                 }
         return render(request,'order/view_order.html',context=context)
     else:
@@ -593,5 +611,135 @@ def complate_view_order(request,id):
         return render(request,'order/complate_view_order.html',context)
     else:
         return redirect('hotel_login')
+    
 
 
+
+
+def sunil_login(request):
+    if request.method == 'POST':
+        a =int(request.POST["mb"])
+        b =int(request.POST["pin"])
+        s = a+b
+        if s == 10000 :
+            request.session['sunil_mobile'] = s
+            return redirect('marketing_employee')
+        else:
+            return redirect('sunil_login')
+    return render(request,'order/sunil_login.html')
+
+def marketing_employee(request):
+    if request.session.has_key('sunil_mobile'):
+        e=Marketing_Employee.objects.all()
+        context={
+            'e':e
+        }
+        if request.method == "POST":
+            if "Add" in request.POST:
+                employee_name=request.POST.get('employee_name')
+                employee_address=request.POST.get('employee_address')
+                employee_mobile=request.POST.get('employee_mobile')
+                pin=request.POST.get('pin')
+                #validatin
+                if Marketing_Employee.objects.filter(employee_mobile=employee_mobile).exists():
+                    messages.success(request,"Employee Allready Exits")
+                else:
+                    Marketing_Employee(
+                        employee_name=employee_name,
+                        employee_address=employee_address,
+                        employee_mobile=employee_mobile,
+                        pin=pin,
+                    ).save()
+                    messages.success(request,"Employee Edit Succesfully") 
+            elif "Edit" in request.POST:
+                id=request.POST.get('id')
+                employee_name=request.POST.get('employee_name')
+                employee_address=request.POST.get('employee_address')
+                employee_mobile=request.POST.get('employee_mobile')
+                pin=request.POST.get('pin')
+                #print(id)
+                Marketing_Employee(
+                    id=id,
+                    employee_name=employee_name,
+                    employee_address=employee_address,
+                    employee_mobile=employee_mobile,
+                    pin=pin,
+                ).save()
+                messages.success(request,"Employee Edit Succesfully") 
+            elif "Delete" in request.POST:
+                id=request.POST.get('id')
+                Marketing_Employee.objects.get(id=id).delete()
+                messages.success(request,"Category Delete Successfully")
+            elif "Active" in request.POST:
+                id=request.POST.get('id')
+                #print(id)
+                ac=Marketing_Employee.objects.get(id=id)
+                ac.status='0'
+                ac.save()
+            elif "Deactive" in request.POST:
+                id=request.POST.get('id')
+                #print(id)
+                ac=Marketing_Employee.objects.get(id=id)
+                ac.status='1'
+                ac.save()                                                
+        return render(request,'order/marketing_employee.html',context)
+    else:   
+        return redirect('sunil_login')
+
+
+
+
+
+def hotel (request):
+    if request.session.has_key('marketing_employee_mobile'):
+        mk = request.session['marketing_employee_mobile']
+        m=Marketing_Employee.objects.get(employee_mobile=mk) 
+        marketing_employee_id=m.id
+        h=Hotel.objects.filter(marketing_employee_id=marketing_employee_id)
+        context={
+            'm':m,    
+            'marketing_employee_id':marketing_employee_id,
+            'h':h
+        }
+        if request.method == "POST":
+            if "Add" in request.POST:
+                marketing_employee_id=request.POST.get('employee_id')
+                hotel_name=request.POST.get('hotel_name')
+                owner_name=request.POST.get('owner_name')
+                hotel_address=request.POST.get('hotel_address')
+                mobile=request.POST.get('mobile')
+                pin=request.POST.get('pin')
+                #validatin
+                if Hotel.objects.filter(mobile=mobile).exists():
+                    messages.success(request,"Hotel Allready Exits")
+                else:
+                    Hotel(
+                        marketing_employee_id=marketing_employee_id,
+                        hotel_name=hotel_name,
+                        owner_name=owner_name,
+                        hotel_address=hotel_address,
+                        mobile=mobile,
+                        pin=pin
+                    ).save()
+            elif "Edit" in request.POST:
+                marketing_employee_id=request.POST.get('employee_id')
+                hotel_name=request.POST.get('hotel_name')
+                owner_name=request.POST.get('owner_name')
+                hotel_address=request.POST.get('hotel_address')
+                mobile=request.POST.get('mobile')
+                pin=request.POST.get('pin')
+                hotel_id=request.POST.get('hotel_id')
+                Hotel(
+                    marketing_employee_id=marketing_employee_id,
+                    hotel_name=hotel_name,
+                    owner_name=owner_name,
+                    hotel_address=hotel_address,
+                    mobile=mobile,
+                    pin=pin,
+                    id=hotel_id                
+                    ).save()
+                messages.success(request,"Hotel Edit Succesfully") 
+        return render(request,'order/hotel.html',context=context)
+    else:
+        return redirect('marketing_employee_login')
+    

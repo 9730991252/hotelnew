@@ -2,13 +2,28 @@ from django.db import models
 
 # Create your models here.
 
+class Marketing_Employee (models.Model):
+    employee_name = models.CharField(max_length=100)
+    employee_address=models.CharField(max_length=100)
+    employee_mobile=models.IntegerField(default=True,unique=True)
+    pin = models.IntegerField()
+    added_date = models.DateTimeField(auto_now_add=True, null=True)
+    status = models.IntegerField(default=1)
+
+
+
+
+
 class Hotel(models.Model):
+    marketing_employee = models.ForeignKey(Marketing_Employee,on_delete=models.PROTECT,default=True)
     hotel_name = models.CharField(max_length=100)
     owner_name=models.CharField(max_length=100)
     hotel_address = models.CharField(max_length=100)
     mobile=models.IntegerField(unique=True)
     pin = models.IntegerField()
-    status=models.IntegerField()
+    status=models.IntegerField(default=1)
+    marketing_admin_status=models.IntegerField(default=1)
+    added_date = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.hotel_name
