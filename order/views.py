@@ -579,7 +579,7 @@ def complate_order(request):
         hotel_mobile = request.session['hotel_mobile']
         h=Hotel.objects.get(mobile=hotel_mobile)
         hotel_id=h.id
-        m=OrderMaster.objects.filter(hotel_id=hotel_id)
+        m=OrderMaster.objects.filter(hotel_id=hotel_id).order_by('-order_filter')
         context={
             'm':m
         }
@@ -601,12 +601,14 @@ def complate_view_order(request,id):
             total += (t.price*t.qty)
             table_number=t.table_number
             date=t.ordered_date
+            bill_number=t.order_filter
         context={
             'h':h,
             'od':od,
             'total':total,
             'table_number':table_number,
-            'date':date
+            'date':date,
+            'bill_number':bill_number
         }
         return render(request,'order/complate_view_order.html',context)
     else:

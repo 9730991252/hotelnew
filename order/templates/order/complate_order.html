@@ -19,6 +19,7 @@
         <table class="table">
             <thead>
               <tr>
+                <th scope="col">Bill Number</th>
                 <th scope="col">Table Number</th>
                 <th scope="col">Date</th>
                 <th scope="col">Total Amount</th>
@@ -28,6 +29,7 @@
             <tbody>
                 {% for m in m %}
               <tr>
+                <td>{{m.order_filter}}</td>
                 <td>{{m.table.table_number}}</td>
                 <td>{{m.ordered_date}}</td>
                 <td>{{m.total_price}}</td>
