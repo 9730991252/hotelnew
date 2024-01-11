@@ -78,7 +78,7 @@ class Cart(models.Model):
     table=models.ForeignKey(Table,on_delete=models.PROTECT,default=True)
     table_number = models.CharField(max_length=100,null=True,blank=True)
     hotel = models.ForeignKey(Hotel,on_delete=models.PROTECT,default=True)
-    employee = models.ForeignKey(Employee,on_delete=models.PROTECT,default=True)
+    employee = models.ForeignKey(Employee,on_delete=models.PROTECT,null=True,blank=True)
     chef_id = models.CharField(max_length=100,null=True,blank=True)
     qty = models.IntegerField(default=1)
     price=models.FloatField(default=0,null=True)

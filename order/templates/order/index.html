@@ -7,96 +7,6 @@
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <title>Index</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <style>
-      .slider{
-        width: 800px;
-        height: 500px;
-        border-radius: 10px;
-        overflow: hidden;
-        margin-left: 400px;
-        
-      }
-      .slides{
-        width: 500%;
-        height: 500px;
-        display: flex;
-      }
-      .slides input{
-        display: none;
-      }
-      .slide{
-        width: 20%;
-        transition:2s;
-      }
-      .slide img{
-        width: 800px;
-        height: 500px;
-      }
-      .navigation-manual{
-        position: absolute;
-        width: 800px;
-        margin-top: -40px;
-        display: flex;
-        justify-content: center;
-      }
-      .manua-btn{
-        border: 2px solid #40D3DC;
-        padding: 5px;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 1s;
-        margin-top: 500px;
-      }
-      .manua-btn:not(:last-child){
-        margin-right: 40px;
-      }
-      .manua-btn:hover{
-        background: #40D3DC;
-      }
-      #radio1:checked ~ .first{
-        margin-left: 0;
-      }
-      #radio2:checked ~ .first{
-        margin-left: -20%;
-      }
-      #radio3:checked ~ .first{
-        margin-left: -40%;
-      }
-      #radio4:checked ~ .first{
-        margin-left: -60%;
-      }
-      .navigation-auto{
-        position: absolute;
-        display: flex;
-        width: 800px;
-        justify-content: center;
-        margin-top: 460px;
-      }
-      .navigation-auto div{
-        border: 2px solid #40D3DC;
-        padding: 5px;
-        border-radius: 10px;
-        transition: 1s;
-      }
-      .navigation-auto div:not(:last-child){
-        margin-right: 40px;
-      }
-      #radio1:checked ~ .navigation-auto .auto-btn1{
-        background: #40D3DC;
-      }
-      #radio2:checked ~ .navigation-auto .auto-btn2{
-        background: #40D3DC;
-      }
-      #radio3:checked ~ .navigation-auto .auto-btn3{
-        background: #40D3DC;
-      }
-      #radio4:checked ~ .navigation-auto .auto-btn4{
-        background: #40D3DC;
-      }
-    </style>
-
-
   </head>
   <body class="p-3 m-0 border-0 bd-example m-0 border-0">
 
@@ -120,7 +30,7 @@
                 <li><a class="dropdown-item" href="hotel_login">Hotel Login</a></li>
                 <li><a class="dropdown-item" href="waiter_login">Waiter Login</a></li>
                 <li><a class="dropdown-item" href="chef_login">Chef Login</a></li>          
-                <li><a class="dropdown-item" href="marketing_employee_login">MK Login</a></li>          
+                <li><a class="dropdown-item" href="marketing_employee_login">PD Login</a></li>          
               </ul>
             </li>
             
@@ -133,53 +43,20 @@
     <!-- End Example Code -->
     <div class="container">
     <h1 class="text-center pt-5">  Order Management Services</h1>
-
-
-    <div class="slider">
-      <div class="slides">
-        <input type="radio" name="radio-btn" id="radio1">
-        <input type="radio" name="radio-btn" id="radio2">
-        <input type="radio" name="radio-btn" id="radio3">
-        <input type="radio" name="radio-btn" id="radio4">
-        <div class="slide first">
-          <img src="static/slider/1.jpeg" alt="">
-      </div>
-      <div class="slide">
-          <img src="static/slider/2.jpeg" alt="">
-      </div>
-      <div class="slide">
-          <img src="static/slider/3.jpeg" alt="">
-      </div>
-      <div class="slide">
-          <img src="static/slider/4.jpeg" alt="">
-      </div>
-
-      <div class="navigation-auto">
-        <div class="auto-btn1"></div>
-        <div class="auto-btn2"></div>
-        <div class="auto-btn3"></div>
-        <div class="auto-btn4"></div>
-      </div>
-      <div class="navigation-manual">
-        <label for="radio1" class="manua-btn"></label>
-        <label for="radio2" class="manua-btn"></label>
-        <label for="radio3" class="manua-btn"></label>
-        <label for="radio4" class="manua-btn"></label>
-      </div>
-      </div>
+<div class="container m-5">
+  <div class="row  m-5">
+    <div class="col-sm-4 m-5"><a href="/hotel_login"   class="btn btn-success px-5 btn-sm" >Hotel Login</a></div>
+    <div class="row">
+      <div class="col-sm-6 m-5"><a href="/waiter_login"   class="btn btn-primary px-5 btn-sm" >Waiter Login</a></div>
+      <div class="col-sm-6 m-5"><a href="/chef_login"   class="btn btn-danger px-5 btn-sm" >Chef Login</a></div>
     </div>
+   
+  </div>
+
+</div>
+
 
   </div>
-    <script type="text/javascript">
-      var counter = 1;
-      setInterval(function(){
-        document.getElementById('radio' + counter).checked = true;
-        counter++;
-        if(counter > 4){
-          counter = 1;
-        }
-      },5000);
-    </script>
 
 
 
