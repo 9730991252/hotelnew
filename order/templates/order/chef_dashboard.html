@@ -33,7 +33,7 @@
 </div>
 
 <div class="container border">
-    <h3>Your Accepted And Processing Dish </h3>
+    <h3>तुम्ही बनवत आहात  </h3>
     <table class="table">
 
         <tbody>
@@ -43,7 +43,7 @@
             <td>{{p.dish.dish_name}}</td>
             <td>{{p.qty}}</td>
             <td>{{p.note}}</td>
-            <td><form action="" method="POST">{% csrf_token %}<input type="hidden" name="chef_id" value="{{e.id}}"><input type="hidden" name="id" value="{{p.id}}"><button class="btn btn-success" type="submit" name="Delivered">Send Table</button></form></td>
+            <td><form action="" method="POST">{% csrf_token %}<input type="hidden" name="chef_id" value="{{e.id}}"><input type="hidden" name="id" value="{{p.id}}"><button class="btn btn-success" type="submit" name="Delivered">पाठवा</button></form></td>
           </tr>
             {% endfor %}
 
@@ -54,7 +54,7 @@
 
 
 <div class="container border">
-    <h3>Your Pending Dish </h3>
+    <h3>बनवणे बाकी आहेत  </h3>
     <table class="table">
 
         <tbody>
@@ -64,7 +64,7 @@
             <td>{{d.dish.dish_name}}</td>
             <td>{{d.qty}}</td>
             <td>{{d.note}}</td>
-            <td><form action="" method="POST">{% csrf_token %}<input type="hidden" name="chef_id" value="{{e.id}}"><input type="hidden" name="id" value="{{d.id}}"><button class="btn btn-danger" type="submit" name="Accepted">{{d.status}}</button></form></td>
+            <td><form action="" method="POST">{% csrf_token %}<input type="hidden" name="chef_id" value="{{e.id}}"><input type="hidden" name="id" value="{{d.id}}"><button class="btn btn-danger" type="submit" name="Accepted">स्विकारा</button></form></td>
           </tr>
             {% endfor %}
 
@@ -74,7 +74,7 @@
 
 
 <div class="container border">
-  <h3>Your Delivered Dish </h3>
+  <h3>बनवून झाले आहेत  </h3>
   <table class="table">
 
       <tbody>

@@ -41,9 +41,11 @@ urlpatterns = [
     path('add_to_cart',views.add_to_cart,name='add_to_cart'),
     path('view_order/<int:id>',views.view_order,name='view_order'),
     path('complate_view_order/<int:id>',views.complate_view_order,name='complate_view_order'),
-    #path('test',views.test,name='test'),
     path('running_table',views.running_table,name='running_table'),
     path('complate_order',views.complate_order,name='complate_order'),
     path('place_order/<int:id>',views.place_order,name='place_order'),
+    path('remove_cart',views.remove_cart,name='remove_cart'),
+    path('merge_card/<int:table_id>/<int:hotel_id>',views.merge_card,name='merge_card'),
+    path('test/<int:table_id>',views.test,name='test'),
    
 ]

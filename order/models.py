@@ -51,6 +51,7 @@ class Dish_category(models.Model):
 
 class Dish(models.Model):
     dish_name = models.CharField(max_length=100)
+    dish_marathi_name = models.CharField(max_length=100,default=True)
     dish_category = models.ForeignKey(Dish_category,on_delete=models.PROTECT,default=True)
     price=models.FloatField(default=0)
     hotel_id = models.CharField(max_length=100,null=True,blank=True)
@@ -75,6 +76,7 @@ STATUS_CHOICES = (
 
 class Cart(models.Model):
     dish=models.ForeignKey(Dish,on_delete=models.PROTECT,default=True)
+    dish_marathi_name = models.CharField(max_length=100,default=True)
     table=models.ForeignKey(Table,on_delete=models.PROTECT,default=True)
     table_number = models.CharField(max_length=100,null=True,blank=True)
     hotel = models.ForeignKey(Hotel,on_delete=models.PROTECT,default=True)
@@ -88,6 +90,36 @@ class Cart(models.Model):
     status = models.CharField(choices=STATUS_CHOICES,default='pending',max_length=50)
     added_date = models.DateTimeField(auto_now_add=True, null=True)
 
+
+
+
+
+
+class NewCart(models.Model):
+    dish=models.ForeignKey(Dish,on_delete=models.PROTECT,default=True)
+    dish_marathi_name = models.CharField(max_length=100,default=True)
+    table=models.ForeignKey(Table,on_delete=models.PROTECT,default=True)
+    table_number = models.CharField(max_length=100,null=True,blank=True)
+    hotel = models.ForeignKey(Hotel,on_delete=models.PROTECT,default=True)
+    employee = models.ForeignKey(Employee,on_delete=models.PROTECT,null=True,blank=True)
+    chef_id = models.CharField(max_length=100,null=True,blank=True)
+    qty = models.IntegerField(default=1)
+    price=models.FloatField(default=0,null=True)
+    total_price=models.FloatField(default=0,null=True)
+    note=models.CharField(max_length=100,null=True)
+    cook_status = models.IntegerField(default=0)
+    status = models.CharField(choices=STATUS_CHOICES,default='pending',max_length=50)
+    added_date = models.DateTimeField(auto_now_add=True, null=True)
+
+
+
+
+
+
+
+
+
+
 class OrderMaster(models.Model):
     hotel = models.ForeignKey(Hotel,on_delete=models.PROTECT,default=True)
     table=models.ForeignKey(Table,on_delete=models.PROTECT,default=True)
@@ -99,7 +131,7 @@ class OrderMaster(models.Model):
 class OrderDetail(models.Model):
     hotel = models.ForeignKey(Hotel,on_delete=models.PROTECT,default=True)
     table_number=models.IntegerField(default=True)
-    dish_name = models.CharField(max_length=100)
+    dish_marathi_name = models.CharField(max_length=100,default=True)
     qty = models.IntegerField(default=1)
     price=models.FloatField(default=0,null=True)
     total_price=models.FloatField(default=0,null=True)

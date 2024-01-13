@@ -33,6 +33,7 @@
 	  <tr>
 		<th scope="col">Number</th>
 		<th scope="col">Dish Name</th>
+		<th scope="col">डिश मराठी नाव </th>
         <th scope="col">Dish Category </th>
 		<th scope="col">Price </th>
 		<th scope="col">Status</th>
@@ -44,6 +45,7 @@
 	  <tr>
 		<th scope="row">{{forloop.counter}}</th>
 		<td>{{d.dish_name}}</td>
+		<td>{{d.dish_marathi_name}}</td>
         <td>{{d.dish_category.category_name}}</td>
 		<td>{{d.price}}</td>
 		<td><form class="" method="POST">{% csrf_token %}{% if d.status == 1 %}<button class="btn btn-success" type="submit" name="Active">Active<input type="hidden" name="id" value="{{d.id}}"></button>{% else %}<button class="btn btn-danger" type="submit" name="Deactive">Deactive<input type="hidden" name="id" value="{{d.id}}"></button>{% endif %}</form></td>
@@ -71,6 +73,13 @@
 					<input type="text" name="dish_name" id="dish_name" class="form-control" value="{{d.dish_name}}">
 				  </div>
 	
+				  <div class="p-3">
+					<input type="hidden" name="hotel_id" value="{{h.id}}">
+					<label for="dish_marathi_name">डिश मराठी नाव </label>
+					<input type="text" name="dish_marathi_name" id="dish_marathi_name" class="form-control" required>
+				  </div>
+	
+
 				  <div class="">
 					<label for="dish_category_id">Select Dish Category </label>
 					<select class="form-control" name="dish_category_id" required>
@@ -140,8 +149,14 @@
 
 			  <div class="p-3">
                 <input type="hidden" name="hotel_id" value="{{h.id}}">
-				<label for="dish_name">Dish Name</label>
+				<label for="dish_name">Dish Eglish Name</label>
 				<input type="text" name="dish_name" id="dish_name" class="form-control" required>
+			  </div>
+
+			  <div class="p-3">
+                <input type="hidden" name="hotel_id" value="{{h.id}}">
+				<label for="dish_marathi_name">डिश मराठी नाव </label>
+				<input type="text" name="dish_marathi_name" id="dish_marathi_name" class="form-control" required>
 			  </div>
 
               <div class="">

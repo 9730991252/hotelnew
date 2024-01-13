@@ -36,17 +36,17 @@
 <div class="col-sm-10 border "> 
   
 
-
+<div id="cart">
 
   <table class="table">
 
     <tbody>{% for cart in cart %}
       <tr>
-        <td>{{cart.dish.dish_name}}</td>
+        <td>{{cart.dish.dish_marathi_name}}</td>
         <td>{{cart.qty}}</td>
         <td>{{cart.note}}</td>
-        <td>wtr-{{cart.employee.employee_name}}</td>
-        <td>{% if cart.cook_status == 0 %}<h4 class="text-bg-danger">Pending</h4>{% else %}<h4 class="text-bg-success">Accepted</h4>{% endif %}</td>
+        <td>{% if cart.cook_status == 0 %}<h4 class="text-bg-danger text-center">Pending</h4>{% else %}<h4 class="text-bg-success">Accepted</h4>{% endif %}</td>
+        <td>{% if cart.cook_status == 0 %}<form action="" method="POST">{% csrf_token %}<input type="hidden" name="cart_id" value="{{cart.id}}"><button type="submit" class="btn btn-danger" name="Delete">X</button></form>{% else %}{% endif %}</td>
       </tr>
 
     </tbody>
@@ -54,7 +54,7 @@
   </table>
 
 
-
+</div>
 
 
 </div> 
@@ -65,7 +65,7 @@
 
   <br>
   <div>{% for dc in dc %}
-    <a  class="btn btn-info" onclick="filter_by_category('{{dc.id}}')">{{dc.category_name}}</a>
+    <a  class="btn btn-success" onclick="filter_by_category('{{dc.id}}')">{{dc.category_name}}</a>
     {% endfor %}
   </div>
 <br>
@@ -112,17 +112,17 @@ function filter_by_category(id){
   success: function(data){
     $("#dish_result").empty()
     //${data.dish[key].dish_name}
-    for (var key=0; key<3; key++){
+    for (var key=0; key<100; key++){
       var temp = `
       <table class="table">
     <tbody>
       <tr>
-        <td>${data.dish[key].dish_name}</td>
+        <td>${data.dish[key].dish_marathi_name}</td>
         <td>Rs- ${data.dish[key].price}</td>
         <td><input id="note${data.dish[key].id}" type="text" size="1" placeholder="note"></input></td>
-        <td><i onclick="plus(${data.dish[key].id})" class="fa-solid fa-plus mx-3"></i></td>
-        <td><input type="readonly" id="qty${data.dish[key].id}" value="1" size=5 class="text-center" disabled></input> </i></td>
         <td><i  onclick="minus(${data.dish[key].id})" class="fa-solid fa-minus  mx-3"></i></td>
+        <td><input type="readonly" id="qty${data.dish[key].id}" value="1" size=5 class="text-center" disabled></input> </i></td>
+        <td><i onclick="plus(${data.dish[key].id})" class="fa-solid fa-plus mx-3"></i></td>
         <td><button type="button" class="btn btn-danger mx-5" onclick=add_to_cart(${data.dish[key].id},${data.dish[key].price})>Confirm </button></td>
       </tr>
     </tbody>
@@ -157,12 +157,13 @@ function dishgetvalue(){
       <table class="table">
     <tbody>
       <tr>
-        <td>${data.dish[key].dish_name}</td>
+        <td>${data.dish[key].dish_marathi_name}</td>
         <td>Rs- ${data.dish[key].price}</td>
         <td><input id="note${data.dish[key].id}" type="text" size="1" placeholder="note"></input></td>
-        <td><i onclick="plus(${data.dish[key].id})" class="fa-solid fa-plus mx-3"></i></td>
-        <td><input type="readonly" id="qty${data.dish[key].id}" value="1" size=5 class="text-center" disabled></input> </i></td>
         <td><i  onclick="minus(${data.dish[key].id})" class="fa-solid fa-minus  mx-3"></i></td>
+        <td><input type="readonly" id="qty${data.dish[key].id}" value="1" size=5 class="text-center" disabled></input> </i></td>
+        <td><i onclick="plus(${data.dish[key].id})" class="fa-solid fa-plus mx-3"></i></td>
+        
         <td><button type="button" class="btn btn-danger mx-5" onclick=add_to_cart(${data.dish[key].id},${data.dish[key].price})>Confirm </button></td>
       </tr>
     </tbody>
@@ -211,7 +212,7 @@ function add_to_cart(id,price){
   var employee_id = document.getElementById('employee_id').value;
   var note = document.getElementById('note'+id).value;
   total_price=price*qty
-  
+  $("#cart").empty()
   //alert(note)
   $.ajax({
     url: "{% url 'add_to_cart' %}",
@@ -228,12 +229,55 @@ function add_to_cart(id,price){
         table_number:table_number
     },
     success: function (data){
-      window.location.reload()
+      $("#cart").empty()
+      for (var key=0; key<100; key++){
+
+        var temp =`
+        <table class="table">
+
+<tbody>
+  <tr>
+    <td>${data.cart[key].dish_marathi_name}</td>
+    <td>${data.cart[key].qty}</td>
+    <td>${data.cart[key].note}</td>
+    <td><h4 class="text-bg-danger text-center">${data.cart[key].status}</h4></td>
+    <td><a onclick="remove_cart(${data.cart[key].id})" class="btn btn-danger">X</a>
+</td>
+  </tr>
+
+</tbody>
+
+</table>
+
+            `
+            $("#cart").append(temp);
+      }
+      
     }
 
   })
 }
 
-  
+
+function remove_cart(id){
+  $.ajax({
+    url: "{% url 'remove_cart' %}",
+    method:'GET',
+    data:{
+      id:id,
+    },
+    success: function (data){
+      if (data.status == 1)
+                //alert("Delete successfully ")
+                window.location.reload()
+     
+    }
+
+  })
+}
+
+
+
+
 
 </script>
