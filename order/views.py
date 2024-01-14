@@ -7,6 +7,7 @@ from django.http import JsonResponse
 
 def index(request):
     #Cart.objects.all().delete()
+    #NewCart.objects.all().delete()
     #OrderMaster.objects.all().delete()
     #OrderDetail.objects.all().delete()
     return render (request,'order/index.html',{})
@@ -446,7 +447,7 @@ def add_to_cart(request):
             for c in c:
                 tempamount=(c.qty*c.price)
                 total_amount+=tempamount
-                print(total_amount)
+                #print(total_amount)
         return JsonResponse({'status': 1,'cart':cart,'total_amount':total_amount})
     else:
         return JsonResponse({'status': 0})
@@ -469,7 +470,7 @@ def view_order(request,id):
             for tb in ct:
                 tempamount=(tb.qty*tb.price)
                 amount+=tempamount
-                print(amount)
+                #print(amount)
 
         return render(request,'order/view_order.html',{'cart':cart,'table':table,'hotel':hotel,'dish_category':dish_category,'amount':amount})
     else:
@@ -498,7 +499,7 @@ def hotel_dashboard(request):
                 if one_table:
                     send_table.append(one_table)
                     processed_combinations.add(combination)
-                    print(one_table)
+                    #print(one_table)
 
         data = {
             'all_table': send_table,
@@ -536,12 +537,19 @@ def running_table(request):
 
         data = {
             'all_table': send_table,
-            'table':table
+            'table':table,
+            'h':h
         }
         return render(request, 'order/running_table.html', data)
     
     else:
         return redirect('hotel_login')
+
+
+
+
+
+
 
 def hotel_dashboard(request):
     if request.session.has_key('hotel_mobile'):
@@ -557,46 +565,70 @@ def place_order(request,id):
     #print(f)
     f+=1
     amount=0
-    c=Cart.objects.filter(hotel_id=hotel_id,table_id=id)
-    for c in c:
-        qty=c.qty
-        price=c.price
-        t=(qty*price)
-        amount+=t
-        table_number=c.table_number
-        dish_name=c.dish.dish_name
-        total_price=c.total_price
-    OrderMaster(
-        hotel_id=hotel_id,
-        table_id=id,
-        order_filter=f,
-        total_price=amount
-        ).save()
-    cart=Cart.objects.filter(hotel_id=hotel_id,table_id=id)
-    for cart in cart:
-        qty=cart.qty
-        price=cart.price
-        table_number=cart.table_number
-        dish_marathi_name=cart.dish.dish_marathi_name
-        total_price=cart.total_price
-        OrderDetail(
+    c=NewCart.objects.filter(hotel_id=hotel_id,table_id=id)
+    if c:
+        for c in c:
+            qty=c.qty
+            price=c.price
+            t=(qty*price)
+            amount+=t
+            table_number=c.table_number
+            dish_name=c.dish.dish_name
+            total_price=c.total_price
+        OrderMaster(
             hotel_id=hotel_id,
-            table_number=table_number,
-            dish_marathi_name=dish_marathi_name,
-            qty=qty,price=price,
-            total_price=total_price,
-            order_filter=f
+            table_id=id,
+            order_filter=f,
+            total_price=amount
             ).save()
-        Cart.objects.filter(hotel_id=hotel_id,table_id=id).delete()
-    return redirect(f'/merge_card/{id}/{hotel_id}')
+        cart=NewCart.objects.filter(hotel_id=hotel_id,table_id=id)
+        for cart in cart:
+            qty=cart.qty
+            price=cart.price
+            table_number=cart.table_number
+            dish_marathi_name=cart.dish.dish_marathi_name
+            total_price=cart.total_price
+            OrderDetail(
+                hotel_id=hotel_id,
+                table_number=table_number,
+                dish_marathi_name=dish_marathi_name,
+                qty=qty,price=price,
+                total_price=total_price,
+                order_filter=f
+                ).save()
+            NewCart.objects.filter(hotel_id=hotel_id,table_id=id).delete()
+    return redirect(f'/complate_view_order/{f}')
 
 
 
 
 def merge_card(request,table_id,hotel_id):
-    cart_item=Cart.objects.filter(hotel_id=hotel_id,table_id=table_id).exists()
-    if cart_item == False:
-        
+    cart_item=Cart.objects.filter(hotel_id=hotel_id,table_id=table_id)
+    if cart_item :
+        for c in cart_item:
+            dish_id=c.dish_id
+            d=Cart.objects.filter(hotel_id=hotel_id,table_id=table_id,dish_id=dish_id)
+            new_qty=0
+            new_total_price=0
+            if d:
+                for d in d:
+                    qty=d.qty
+                    total_price=d.total_price
+                    new_total_price+=total_price
+                    new_qty+=qty
+                NewCart(
+                    dish_id=d.dish_id,
+                    dish_marathi_name=d.dish_marathi_name,
+                    hotel_id=d.hotel_id,
+                    table_id=d.table_id,            
+                    qty=new_qty,
+                    price=d.price,
+                    note=d.note,
+                    total_price=new_total_price,
+                    table_number=d.table_number
+                    ).save()
+                Cart.objects.filter(hotel_id=hotel_id,table_id=table_id,dish_id=d.dish_id).delete()
+    return redirect(f'/place_order/{table_id}')      
 
 
 
@@ -638,19 +670,21 @@ def complate_view_order(request,id):
         hotel_id=h.id
         od=OrderDetail.objects.filter(hotel_id=hotel_id,order_filter=id)
         total=0
-        for t in od:
-            total += (t.price*t.qty)
-            table_number=t.table_number
-            date=t.ordered_date
-            bill_number=t.order_filter
-        context={
-            'h':h,
-            'od':od,
-            'total':total,
-            'table_number':table_number,
-            'date':date,
-            'bill_number':bill_number
-        }
+        context={}
+        if od :
+            for t in od:
+                total += (t.price*t.qty)
+                table_number=t.table_number
+                date=t.ordered_date
+                bill_number=t.order_filter
+            context={
+                'h':h,
+                'od':od,
+                'total':total,
+                'table_number':table_number,
+                'date':date,
+                'bill_number':bill_number
+            }
         return render(request,'order/complate_view_order.html',context)
     else:
         return redirect('hotel_login')
@@ -787,6 +821,16 @@ def hotel (request):
         return redirect('marketing_employee_login')
     
 
+def remove_cart_waiter(request):
+    if request.method == 'GET':
+        id = request.GET['id']
+        if Cart.objects.filter(id=id,status='Pending').exists():
+                Cart.objects.get(id=id,status='Pending').delete()
+        return JsonResponse({'status': 1,})
+    else:
+        return JsonResponse({'status': 0})
+
+
 def remove_cart(request):
     if request.method == 'GET':
         id = request.GET['id']
@@ -813,7 +857,7 @@ def test(request,id):
         hotel=Hotel.objects.get(mobile=hm)
         dish_category=Dish_category.objects.filter(hotel_id=hotel.id,status=1)
         table=Table.objects.get(id=id)
-        print(table.id)
+        #print(table.id)
         cart=Cart.objects.filter(hotel_id=hotel.id,table_id=id)
         amount=0
        

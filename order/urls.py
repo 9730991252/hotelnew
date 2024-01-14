@@ -45,7 +45,9 @@ urlpatterns = [
     path('complate_order',views.complate_order,name='complate_order'),
     path('place_order/<int:id>',views.place_order,name='place_order'),
     path('remove_cart',views.remove_cart,name='remove_cart'),
+    path('remove_cart_waiter',views.remove_cart_waiter,name='remove_cart_waiter'),
     path('merge_card/<int:table_id>/<int:hotel_id>',views.merge_card,name='merge_card'),
+    
     path('test/<int:table_id>',views.test,name='test'),
    
 ]

@@ -11,17 +11,21 @@
   <body>
 
     <div class="container mt-5 p-5 border rounded">
-      <a href="/"   class="btn btn-success px-5 btn-sm" >Hotel Dashbord</a>
+      <div class="row col-sm-3">
+      <a href="/"   class="btn btn-success px-5 btn-sm" >Home</a>
+    </div>
+    <p></p>
+    <div class="row col-sm-3">
+			<a href=""  data-bs-toggle="modal" data-bs-target="#Add_hotel_Modal" class="btn btn-primary px-5 btn-sm" >Add New Hotel </a>
+			
+    </div>
 		{% if messages %}
 		
 		{% for message in messages %}
 		<div class="alert alert-success text-center mb-3">{{message}}</div>
 		{% endfor %}
 		{% endif %}
-		<div class="">
-			<a href=""  data-bs-toggle="modal" data-bs-target="#Add_hotel_Modal" class="btn btn-primary px-5 btn-sm" >Add New Hotel </a>
-			
-		</div>
+
 
 
 	
