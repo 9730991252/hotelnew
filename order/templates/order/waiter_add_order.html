@@ -19,7 +19,7 @@
   </head>
   <body>
     <div id="test"></div>
-<div class="container p-5 m-5 border rounded">
+<div class="container  border rounded">
   <a href="/waiter_dashboard"   class="btn btn-success px-5 btn-sm" >Back</a>
 
   <div class="container border border-dark " >
@@ -113,7 +113,7 @@ function filter_by_category(id){
     $("#dish_result").empty()
     //${data.dish[key].dish_name}
     for (var key=0; key<100; key++){
-      var temp = `
+      /*var temp = `
       <table class="table">
     <tbody>
       <tr>
@@ -127,6 +127,29 @@ function filter_by_category(id){
       </tr>
     </tbody>
   </table>
+                `*/
+
+                var temp =`
+                
+                <div class="col-sm-4 border my-5 mx-3">
+<div class="row text-center my-1">
+  <div class="col-12"><h4>${data.dish[key].dish_marathi_name}</h4></div>
+  
+</div>
+  <div class="row text-center">
+    <div class="col-5"><h5>Rs- ${data.dish[key].price}</h5></div>
+    <div class="col-5 "><input id="note${data.dish[key].id}" type="text" size="2" placeholder="note"></input></div>
+  </div>
+
+<div class="row py-4 text-center">
+  <div class="col-3"><button type="button" onclick="minus(${data.dish[key].id})" class="btn btn-success px-5">-</button></div>
+  <div class="col-1"><strong  id="qty${data.dish[key].id}"  >1</strong></div>
+  <div class="col-3"><button type="button" onclick="plus(${data.dish[key].id})" class="btn btn-success px-5">+</button></div>
+  <div class="col-5"><button type="button" class="btn btn-danger mx-auto" onclick=add_to_cart(${data.dish[key].id},${data.dish[key].price})>Confirm </button></div>
+</div>
+  </div>
+
+
                 `
                 $("#dish_result").append(temp);
     }
@@ -153,21 +176,27 @@ function dishgetvalue(){
     $("#dish_result").empty()
     //${data.dish[key].dish_name}
     for (var key=0; key<3; key++){
-      var temp = `
-      <table class="table">
-    <tbody>
-      <tr>
-        <td>${data.dish[key].dish_marathi_name}</td>
-        <td>Rs- ${data.dish[key].price}</td>
-        <td><input id="note${data.dish[key].id}" type="text" size="1" placeholder="note"></input></td>
-        <td><button type="button" onclick="minus(${data.dish[key].id})" class="btn btn-success">-</button></td>
-        <td><input type="readonly" id="qty${data.dish[key].id}" value="1" size=5 class="text-center" disabled></input> </i></td>
-        <td><button type="button" onclick="plus(${data.dish[key].id})" class="btn btn-success">+</button></td>
-        
-        <td><button type="button" class="btn btn-danger mx-5" onclick=add_to_cart(${data.dish[key].id},${data.dish[key].price})>Confirm </button></td>
-      </tr>
-    </tbody>
-  </table>
+      var temp =`
+                
+                <div class="col-sm-4 border my-5 mx-3">
+<div class="row text-center my-1">
+  <div class="col-12"><h4>${data.dish[key].dish_marathi_name}</h4></div>
+  
+</div>
+  <div class="row text-center">
+    <div class="col-5"><h5>Rs- ${data.dish[key].price}</h5></div>
+    <div class="col-5 "><input id="note${data.dish[key].id}" type="text" size="2" placeholder="note"></input></div>
+  </div>
+
+<div class="row py-4 text-center">
+  <div class="col-3"><button type="button" onclick="minus(${data.dish[key].id})" class="btn btn-success px-5">-</button></div>
+  <div class="col-1"><strong  id="qty${data.dish[key].id}"  >1</strong></div>
+  <div class="col-3"><button type="button" onclick="plus(${data.dish[key].id})" class="btn btn-success px-5">+</button></div>
+  <div class="col-5"><button type="button" class="btn btn-danger mx-auto" onclick=add_to_cart(${data.dish[key].id},${data.dish[key].price})>Confirm </button></div>
+</div>
+  </div>
+
+
                 `
                 $("#dish_result").append(temp);
     }
@@ -182,20 +211,20 @@ function dishgetvalue(){
 //plus code
 
 function plus(id){
-  var qty = document.getElementById('qty'+id).value
+  var qty = document.getElementById('qty'+id).innerText
   if(qty < 50){
     qty++;
-  document.getElementById('qty'+id).value=qty;
+  document.getElementById('qty'+id).innerText=qty;
   }
     }
     
   // minus btn code
 
     function minus(id){
-  var qty = document.getElementById('qty'+id).value
+  var qty = document.getElementById('qty'+id).innerText
   if(qty > 1){
   qty--;
-  document.getElementById('qty'+id).value=qty;
+  document.getElementById('qty'+id).innerText=qty;
   }
     }
     
@@ -203,7 +232,7 @@ function plus(id){
 // add to cart 
 
 function add_to_cart(id,price){
-  var qty = document.getElementById('qty'+id).value;
+  var qty = document.getElementById('qty'+id).innerText;
   dish_id=id
   price=price
   var hotel_id = document.getElementById('hotel_id').value;

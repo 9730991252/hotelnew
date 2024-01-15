@@ -849,23 +849,9 @@ def remove_cart(request):
 
 
 
+def test(request):
+      
+    return render(request,'order/test.html')
 
-    
-def test(request,id):
-    if request.session.has_key('hotel_mobile'):
-        hm = request.session['hotel_mobile']
-        hotel=Hotel.objects.get(mobile=hm)
-        dish_category=Dish_category.objects.filter(hotel_id=hotel.id,status=1)
-        table=Table.objects.get(id=id)
-        #print(table.id)
-        cart=Cart.objects.filter(hotel_id=hotel.id,table_id=id)
-        amount=0
-       
-  
-
-               
-        return render(request,'order/view_order.html',{'table':table,'cart':cart,'hotel':hotel})
-    else:
-        return redirect('hotel_login')
 
 

@@ -18,11 +18,12 @@
 		<div class="alert alert-success text-center mb-3">{{message}}</div>
 		{% endfor %}
 		{% endif %}
-		<div class="d-flex p-3">
-			<form action="" method="POST">{% csrf_token %}<input type="hidden" name="hotel_id" value="{{h.id}}"><button type="submit" class="btn btn-primary" name="Add">Add New Table </button></form>
-			<a href="/hotel_dashboard"   class="btn btn-success px-5 btn-sm" >Hotel Dashbord</a>
+			<div class="row">
+				<div class="col-6"><form action="" method="POST">{% csrf_token %}<input type="hidden" name="hotel_id" value="{{h.id}}"><button type="submit" class="btn btn-primary" name="Add">Add New Table </button></form></div>
+			
+		
+			<div class="col-6"><a href="/hotel_dashboard"   class="btn btn-success " >Hotel Dashbord</a></div>
 		</div>
-
 
 	
 <table class="table">
