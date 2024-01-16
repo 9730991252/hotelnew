@@ -15,17 +15,20 @@ def index(request):
 
 
 def hotel_login(request):
-    if request.method == "POST":
-        mb=request.POST ['mb']
-        pin=request.POST ['pin']
-        s= Hotel.objects.filter(mobile=mb,pin=pin,status=1)
-        if s:
-            request.session['hotel_mobile'] = request.POST["mb"]
-            return redirect('hotel_dashboard')
-        else:
-            messages.success(request,"please insert correct information or call more suport 9730991252")            
-            return redirect('hotel_login')
-    return render(request,'order/hotel_login.html')
+    if request.session.has_key('hotel_mobile'):
+        return redirect('hotel_dashboard')
+    else:
+        if request.method == "POST":
+            mb=request.POST ['mb']
+            pin=request.POST ['pin']
+            s= Hotel.objects.filter(mobile=mb,pin=pin,status=1)
+            if s:
+                request.session['hotel_mobile'] = request.POST["mb"]
+                return redirect('hotel_dashboard')
+            else:
+                messages.success(request,"please insert correct information or call more suport 9730991252")            
+                return redirect('hotel_login')
+        return render(request,'order/hotel_login.html')
 
 
 
@@ -277,32 +280,38 @@ def table(request):
 
 
 def waiter_login(request):
-    if request.method == "POST":
-        mb=request.POST ['mb']
-        pin=request.POST ['pin']
-        s= Employee.objects.filter(employee_mobile=mb,pin=pin,status=1,department='waiter')
-        if s:
-            request.session['waiter_mobile'] = request.POST["mb"]
-            return redirect('waiter_dashboard')
-        else:
-            messages.success(request,"please insert correct information or call more suport 9730991252")            
-            return redirect('waiter_login')
-    return render(request,'order/waiter_login.html')
+    if request.session.has_key('waiter_mobile'):
+        return redirect('waiter_dashboard')
+    else:
+        if request.method == "POST":
+            mb=request.POST ['mb']
+            pin=request.POST ['pin']
+            s= Employee.objects.filter(employee_mobile=mb,pin=pin,status=1,department='waiter')
+            if s:
+                request.session['waiter_mobile'] = request.POST["mb"]
+                return redirect('waiter_dashboard')
+            else:
+                messages.success(request,"please insert correct information or call more suport 9730991252")            
+                return redirect('waiter_login')
+        return render(request,'order/waiter_login.html')
 
 
 
 def chef_login(request):
-    if request.method == "POST":
-        mb=request.POST ['mb']
-        pin=request.POST ['pin']
-        s= Employee.objects.filter(employee_mobile=mb,pin=pin,status=1,department='chef')
-        if s:
-            request.session['chef_mobile'] = request.POST["mb"]
-            return redirect('chef_dashboard')
-        else:
-            messages.success(request,"please insert correct information or call more suport 9730991252")            
-            return redirect('chef_login')
-    return render(request,'order/chef_login.html')
+    if request.session.has_key('chef_mobile'):
+        return redirect('chef_dashboard')    
+    else:
+        if request.method == "POST":
+            mb=request.POST ['mb']
+            pin=request.POST ['pin']
+            s= Employee.objects.filter(employee_mobile=mb,pin=pin,status=1,department='chef')
+            if s:
+                request.session['chef_mobile'] = request.POST["mb"]
+                return redirect('chef_dashboard')
+            else:
+                messages.success(request,"please insert correct information or call more suport 9730991252")            
+                return redirect('chef_login')
+        return render(request,'order/chef_login.html')
 
 
 
@@ -354,10 +363,12 @@ def waiter_dashboard (request):
     if request.session.has_key('waiter_mobile'):
         wm = request.session['waiter_mobile']
         w=Employee.objects.get(employee_mobile=wm) 
+        h=Hotel.objects.get(id=w.hotel_id)
         t=Table.objects.filter(hotel_id=w.hotel_id,status=1)        
         context={
             'w':w,    
             't':t,
+            'h':h,
         }
         return render(request,'order/waiter_dashboard.html',context=context)
     else:
@@ -483,28 +494,25 @@ def hotel_dashboard(request):
     if request.session.has_key('hotel_mobile'):
         hotel_mobile = request.session['hotel_mobile']
         h = Hotel.objects.get(mobile=hotel_mobile)
-        hotel_id = h.id
-        cart = Cart.objects.filter(hotel_id=hotel_id)
+        e=Employee.objects.filter(hotel_id=h.id).count()
+        d=Dish.objects.filter(hotel_id=h.id).count()
+        t=Table.objects.filter(hotel_id=h.id).count()
+        o=OrderDetail.objects.filter(hotel_id=h.id).count()
+        total=0
 
-        send_table = []
-        processed_combinations = set()
-
-        for c in cart:
-            tbn = c.table_number
-            th_id = c.hotel_id
-            combination = (th_id, tbn)
-
-            if combination not in processed_combinations:
-                one_table = Table.objects.filter(hotel_id=th_id, table_number=tbn).first()
-                if one_table:
-                    send_table.append(one_table)
-                    processed_combinations.add(combination)
-                    #print(one_table)
-
-        data = {
-            'all_table': send_table,
+        total_amount=OrderDetail.objects.filter(hotel_id=h.id)
+        for total_amount in total_amount:
+            temp=(total_amount.qty*total_amount.price)
+            total+=temp
+        context={
+            'h':h,
+            'e':e,
+            'd':d,
+            't':t,
+            'o':o,
+            'total':total
         }
-        return render(request, 'order/hotel_dashboard.html', data)
+        return render(request, 'order/hotel_dashboard.html',context)
     
     else:
         return redirect('hotel_login')
@@ -551,12 +559,7 @@ def running_table(request):
 
 
 
-def hotel_dashboard(request):
-    if request.session.has_key('hotel_mobile'):
-        return render(request, 'order/hotel_dashboard.html')
-    else:
-        return redirect('hotel_login')
-    
+
 def place_order(request,id):
     hotel_mobile = request.session['hotel_mobile']
     h=Hotel.objects.get(mobile=hotel_mobile)
@@ -842,6 +845,19 @@ def remove_cart(request):
 
 
 
+
+
+
+def change_color(request):
+    if request.method == 'GET':
+        hotel_id = request.GET['hotel_id']
+        c=Cart.objects.values().filter(hotel_id=hotel_id)
+        if c:
+            cart=list(c)
+                
+        return JsonResponse({'status': 1,'cart':cart})
+    else:
+        return JsonResponse({'status': 0})
 
 
 

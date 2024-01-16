@@ -47,7 +47,7 @@ urlpatterns = [
     path('remove_cart',views.remove_cart,name='remove_cart'),
     path('remove_cart_waiter',views.remove_cart_waiter,name='remove_cart_waiter'),
     path('merge_card/<int:table_id>/<int:hotel_id>',views.merge_card,name='merge_card'),
-    
+    path('change_color',views.change_color,name='change_color'),
     path('test',views.test,name='test'),
    
 ]

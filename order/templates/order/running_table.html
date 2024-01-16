@@ -18,7 +18,7 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
   </head>
   <body>
-
+    <input type="hidden" id="hotel_id" value="{{h.id}}"></input>
     <div class="container mt-5 p-5 border rounded">
       <div class="row py-2">
 
@@ -64,16 +64,17 @@
     <div  class="container border">
         <h1 class="text-center bg"> नवीन टेबल सुरु साठी   </h1>
       </div>
-      <div class="container ">
-        <div class="row ">
+      <div class="container border">
+        <div class="row text-center">
         {% for t in table %}
           <div class="card mx-auto m-4 " style="width: 18rem;">
           
-            <div class="card-body m-4">
-              <h1 class="card-title m-2" >{{t.table_number}}<h6 class="m-2 p-1"> Table</h6> </h1>
-              <div>
+            <div class="card-body ">
+              <div><strong id="color{{t.id}}"></strong></div>
+              <h1 class="card-title " >{{t.table_number}}<h6 class="m-2 p-1"> Table</h6> </h1>
+              
               <a href="/view_order/{{t.id}}" class="btn btn-primary" >Book Order </a>
-            </div>
+            
             </div>
           </div>
         {% endfor %}
@@ -100,6 +101,29 @@
 
 <script>
 
+change_color()
+
+function change_color(){
+  var hotel_id = document.getElementById('hotel_id').value;
+ 
+  $.ajax({
+    url: "{% url 'change_color' %}",
+    method:'GET',
+    data:{
+      hotel_id:hotel_id,
+    },
+    success: function (data){
+      for (var key=0; key<3; key++){
+        i=(data.cart[key].table_id)
+        text=`<h5 class="text-bg-danger text-center">Running </h5>`
+     document.getElementById('color'+i).innerHTML=text;
+   
+      }
+  
+    }
+
+  })
+}
 
 
 
